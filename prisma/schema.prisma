@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String             @id @default(cuid())
+  email          String             @unique
+  name           String?
+  passwordHash   String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  journalEntries JournalEntry[]
+  goals          Goal[]
+  chatSessions   ChatSession[]
+  timeLockedMsgs TimeLockedMessage[]
+  embeddings     Embedding[]
+
+  @@index([email])
+}
+
+model JournalEntry {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @db.Text
+  mood      Int      @default(5) // 1-10 scale
+  tags      String[] @default([])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([mood])
+}
+
+model Goal {
+  id          String     @id @default(cuid())
+  title       String
+  description String?    @db.Text
+  status      GoalStatus @default(IN_PROGRESS)
+  targetDate  DateTime?
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+enum GoalStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+model ChatSession {
+  id        String    @id @default(cuid())
+  title     String    @default("New Chat")
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Message {
+  id            String      @id @default(cuid())
+  role          MessageRole
+  content       String      @db.Text
+  chatSessionId String
+  chatSession   ChatSession @relation(fields: [chatSessionId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@index([chatSessionId])
+  @@index([createdAt])
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
+model TimeLockedMessage {
+  id         String   @id @default(cuid())
+  content    String   @db.Text
+  unlockDate DateTime
+  isLocked   Boolean  @default(true)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([unlockDate])
+  @@index([isLocked])
+}
+
+model Embedding {
+  id         String   @id @default(cuid())
+  vector     Float[]
+  sourceType String   // "journal" | "chat" | "goal"
+  sourceId   String
+  content    String   @db.Text  // original text for retrieval display
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([sourceType])
+  @@index([sourceId])
+}
