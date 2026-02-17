@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import NextImage from 'next/image';
 
 export default function LandingPage() {
     return (
@@ -12,8 +13,13 @@ export default function LandingPage() {
             {/* Header */}
             <header className="relative z-10 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold shadow-lg shadow-brand-500/25">
-                        FE
+                    <div className="relative w-10 h-10">
+                        <NextImage
+                            src="/logo.png"
+                            alt="Future Echo"
+                            fill
+                            className="object-contain"
+                        />
                     </div>
                     <span className="text-xl font-bold text-white tracking-tight">Future Echo</span>
                 </div>
@@ -113,7 +119,7 @@ export default function LandingPage() {
 
             {/* Footer */}
             <footer className="relative z-10 border-t border-white/[0.06] py-8 text-center text-sm text-surface-200/30">
-                © {new Date().getFullYear()} Future Echo. Your journey, your perspective.
+                © {new Date().getFullYear()} Future Echo By Bleta🐝. Your journey, your perspective.
             </footer>
         </div>
     );

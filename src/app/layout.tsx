@@ -6,6 +6,11 @@ export const metadata: Metadata = {
     title: 'Future Echo — Talk to Your Future Self',
     description: 'An AI-powered journaling app that simulates conversations with your future self. Reflect, grow, and find perspective through the wisdom of who you will become.',
     keywords: ['journaling', 'AI', 'self-reflection', 'personal growth', 'future self'],
+    icons: {
+        icon: '/logo.png',
+        shortcut: '/logo.png',
+        apple: '/logo.png',
+    },
 };
 
 export default function RootLayout({

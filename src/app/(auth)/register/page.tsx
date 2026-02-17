@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import NextImage from 'next/image';
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -62,8 +63,13 @@ export default function RegisterPage() {
             <div className="w-full max-w-md relative z-10 animate-fade-in">
                 {/* Logo */}
                 <div className="text-center mb-10">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-bold text-xl mx-auto mb-4 shadow-lg shadow-brand-500/25">
-                        FE
+                    <div className="relative w-14 h-14 mx-auto mb-4">
+                        <NextImage
+                            src="/logo.png"
+                            alt="Future Echo"
+                            fill
+                            className="object-contain"
+                        />
                     </div>
                     <h1 className="text-2xl font-bold text-white">Create your account</h1>
                     <p className="text-surface-200/50 mt-1">Begin your journey with Future Echo</p>
